@@ -1,0 +1,26 @@
+{
+  "name": "cpsc455-jaydenh",
+  "version": "1.0.0",
+  "description": "MVC trading app with Express and EJS",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jhelmick9/CPSC455-JaydenH.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/jhelmick9/CPSC455-JaydenH/issues"
+  },
+  "homepage": "https://github.com/jhelmick9/CPSC455-JaydenH#readme",
+  "dependencies": {
+    "ejs": "^4.0.1",
+    "express": "^5.2.1"
+  }
+}

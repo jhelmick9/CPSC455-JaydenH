@@ -1,0 +1,47 @@
+<%- include('../Partials/header') %>
+
+<div class="main">
+  <h2>Edit Trade Item</h2>
+
+  <form action="/trades/<%= item.id %>" method="post" class="trade-form">
+    <label>Item Name<br>
+      <input name="name" value="<%= item.name %>" required>
+    </label>
+
+    <label>Category<br>
+      <input name="category" value="<%= item.category %>" required>
+    </label>
+
+    <label>Details<br>
+      <textarea name="details" rows="3" required><%= item.details %></textarea>
+    </label>
+
+    <label>Team<br>
+      <input name="team" value="<%= item.team || '' %>">
+    </label>
+
+    <label>Year<br>
+      <input name="year" type="number" min="1800" max="2100" value="<%= item.year || '' %>">
+    </label>
+
+    <label>Condition<br>
+      <input name="condition" value="<%= item.condition || '' %>">
+    </label>
+
+    <label>Image URL<br>
+      <input name="image" value="<%= item.image || '/image.png' %>">
+    </label>
+
+    <label>Status<br>
+      <input name="status" value="<%= item.status %>">
+    </label>
+
+    <button type="submit">Save Changes</button>
+  </form>
+
+  <form action="/trades/<%= item.id %>/delete" method="post" onsubmit="return confirm('Delete this item?');">
+    <button type="submit" class="deleteButton">Delete Item</button>
+  </form>
+</div>
+
+<%- include('../Partials/footer') %>
