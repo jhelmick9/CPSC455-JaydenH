@@ -1,0 +1,74 @@
+use cards
+
+db.dropDatabase()
+
+db.createCollection('Card')
+
+db.Card.insertMany([
+  {
+    id: '1',
+    name: 'Mike Trout',
+    category: 'modern',
+    details: 'Center field card in excellent shape.',
+    team: 'Angels',
+    year: 2019,
+    condition: '8.5',
+    image: '/Picture/MikeT1.webp',
+    status: 'Available'
+  },
+  {
+    id: '2',
+    name: 'Bryce Harper',
+    category: 'modern',
+    details: 'Signed card with minor edge wear.',
+    team: 'Phillies',
+    year: 2020,
+    condition: '7.0',
+    image: '/Picture/BryceH1.jpg',
+    status: 'Available'
+  },
+  {
+    id: '3',
+    name: 'Shohei Ohtani',
+    category: 'modern',
+    details: 'Dual-threat feature card, sharp corners.',
+    team: 'Angels',
+    year: 2021,
+    condition: '8.0',
+    image: '/Picture/ShoheiO1.webp',
+    status: 'Available'
+  },
+  {
+    id: '4',
+    name: 'Ken Griffey Jr.',
+    category: 'vintage',
+    details: 'Classic Mariners-era card.',
+    team: 'Mariners',
+    year: 1991,
+    condition: '9.5',
+    image: '/Picture/KenG1.jpg',
+    status: 'Available'
+  },
+  {
+    id: '5',
+    name: 'Nolan Ryan',
+    category: 'vintage',
+    details: 'Hall of Fame pitcher card.',
+    team: 'Rangers',
+    year: 1989,
+    condition: '5.0',
+    image: '/Picture/NolanR1.jpg',
+    status: 'Available'
+  },
+  {
+    id: '6',
+    name: 'Cal Ripken Jr.',
+    category: 'vintage',
+    details: 'Iron Man collector card.',
+    team: 'Orioles',
+    year: 1990,
+    condition: '6.0',
+    image: '/Picture/CalR1.jpg',
+    status: 'Available'
+  }
+])

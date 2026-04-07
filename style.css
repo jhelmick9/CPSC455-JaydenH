@@ -22,7 +22,7 @@ body {
   max-width: none;
   background: #035ade; 
   color: #ffffff;
-  padding: 5px; 
+  padding: 2px; 
   border-radius: 0;
 }
 .header-inner {
@@ -69,6 +69,16 @@ body {
   line-height: 1.4;
   align-items: center;
 }
+
+.home-main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding-inline: 20px;
+  padding-left: 10px;
+
+}
+
+
 .category { margin-top: 12px; }
 .category h3 { margin: 8px 0; font-size: 1.05rem; }
 
@@ -128,10 +138,4 @@ body {
   .header { gap: 8px; }
   .header img { height: 20px; width: 18px; }
   .header h1 { font-size: 1.1rem; }
-}
-
-.home-main {
-  max-width: 900px;
-  margin: 0 auto;
-  padding-inline: 20px;
 }

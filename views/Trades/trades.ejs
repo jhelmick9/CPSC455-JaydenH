@@ -2,27 +2,27 @@
 
 <div class="main">
   <h2>Available Trades</h2>
-  <p>Browse baseball card items by category.</p>
+  <p>Browse baseball cards by catigories.</p>
   <p><a href="/trades/new">Create New Item</a></p>
 
-  <% if (categories.length === 0) { %>
+  <% const topicList = topics || [...new Set(items.map((item) => item.category))]; %>
+
+  <% if (topicList.length === 0) { %>
     <p>No items are currently available.</p>
   <% } %>
 
-  <% categories.forEach((category) => { %>
+  <% topicList.forEach((topic) => { %>
     <section class="category">
-      <h3><%= category.charAt(0).toUpperCase() + category.slice(1) %></h3>
+      <h3><%= topic %></h3>
 
-      <% const categoryItems = items.filter((item) => item.category === category); %>
-      <% if (categoryItems.length === 0) { %>
-        <p>No items in this category.</p>
-      <% } %>
-
-      <% categoryItems.forEach((item) => { %>
-        <div class="trade-item">
-          <a href="/trades/<%= item.id %>"><%= item.name %></a>
-          <p>Team: <%= item.team || 'N/A' %> | Year: <%= item.year || 'N/A' %> | Status: <%= item.status %></p>
-        </div>
+      <% items.forEach((item) => { %>
+        <% if (item.category === topic) { %>
+          <div class="trade-item">
+            <a href="/trades/<%= item.id %>"><%= item.name %></a>
+            <p>Catigories: <%= item.category %></p>
+            <p>Team: <%= item.team || 'N/A' %> | Year: <%= item.year || 'N/A' %> | Status: <%= item.status %></p>
+          </div>
+        <% } %>
       <% }) %>
     </section>
   <% }) %>

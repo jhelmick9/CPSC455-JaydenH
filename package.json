@@ -2,10 +2,10 @@
   "name": "cpsc455-jaydenh",
   "version": "1.0.0",
   "description": "MVC trading app with Express and EJS",
-  "main": "app.js",
+  "main": "model/app.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "node app.js"
+    "start": "node model/app.js",
+    "dev": "nodemon model/app.js"
   },
   "repository": {
     "type": "git",
@@ -20,7 +20,10 @@
   },
   "homepage": "https://github.com/jhelmick9/CPSC455-JaydenH#readme",
   "dependencies": {
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.3",
     "ejs": "^4.0.1",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "mongoose": "^9.4.1"
   }
 }

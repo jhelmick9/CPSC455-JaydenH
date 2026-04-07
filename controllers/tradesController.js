@@ -1,99 +1,151 @@
+const mongoose = require('mongoose');
 const itemModel = require('../model/trade');
 
-exports.index = (req, res) => {
-  const items = itemModel.findTrades();
-  const categories = itemModel.findCategories();
-  res.render('Trades/trades', { items, categories });
-};
+function buildTrade(body = {}) {
+  return {
+    name: body.name || '',
+    category: body.category || '',
+    details: body.details || '',
+    team: body.team || '',
+    year: body.year ? Number.parseInt(body.year, 10) : null,
+    condition: body.condition || body.grade || '',
+    image: body.image || '/Picture/image.png',
+    status: body.status || 'Available'
+  };
+}
 
-exports.show = (req, res, next) => {
-  const item = itemModel.findById(req.params.id);
-
-  if (!item) {
-    const err = new Error(`Cannot find an item with id ${req.params.id}`);
-    err.status = 404;
-    return next(err);
+function validateId(id, next) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    const err = new Error('Invalid trade ID');
+    err.status = 400;
+    next(err);
+    return false;
   }
 
-  return res.render('Trades/trade', { item });
+  return true;
+}
+
+function handleDatabaseError(err, next) {
+  if (err.name === 'ValidationError') {
+    err.status = 400;
+  } else {
+    err.status = 500;
+  }
+
+  next(err);
+}
+
+exports.index = async (req, res, next) => {
+  try {
+    const items = await itemModel.find().sort({ category: 1, name: 1 });
+    const topics = [...new Set(items.map((item) => item.category))];
+    res.render('Trades/trades', { items, topics });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.show = async (req, res, next) => {
+  if (!validateId(req.params.id, next)) return;
+
+  try {
+    const item = await itemModel.findById(req.params.id);
+
+    if (!item) {
+      const err = new Error(`Cannot find an item with id ${req.params.id}`);
+      err.status = 404;
+      return next(err);
+    }
+
+    return res.render('Trades/trade', { item });
+  } catch (err) {
+    return next(err);
+  }
 };
 
 exports.new = (req, res) => {
   res.render('Trades/newTrade');
 };
 
-exports.create = (req, res, next) => {
-  const { name, category, details, status, image, team, year, condition, grade } = req.body || {};
+exports.create = async (req, res, next) => {
+  const trade = buildTrade(req.body);
 
-  if (!name || !category || !details) {
-    const err = new Error('Name, category, and details are required to create an item.');
+  if (!trade.name || !trade.category || !trade.details) {
+    const err = new Error('Name, catigories, and details are required to create an item.');
     err.status = 400;
     return next(err);
   }
 
-  const created = itemModel.save({
-    name: name.trim(),
-    category: category.trim().toLowerCase(),
-    details: details.trim(),
-    status: (status || 'Available').trim(),
-    image: (image || '/image.png').trim(),
-    team: (team || '').trim(),
-    year: year ? Number.parseInt(year, 10) : null,
-    condition: (condition || grade || 'None').trim()
-  });
-
-  return res.redirect(`/trades/${created.id}`);
+  try {
+    const item = await itemModel.create(trade);
+    return res.redirect(`/trades/${item.id}`);
+  } catch (err) {
+    return handleDatabaseError(err, next);
+  }
 };
 
-exports.edit = (req, res, next) => {
-  const item = itemModel.findById(req.params.id);
+exports.edit = async (req, res, next) => {
+  if (!validateId(req.params.id, next)) return;
 
-  if (!item) {
-    const err = new Error(`Cannot find an item with id ${req.params.id}`);
-    err.status = 404;
+  try {
+    const item = await itemModel.findById(req.params.id);
+
+    if (!item) {
+      const err = new Error(`Cannot find an item with id ${req.params.id}`);
+      err.status = 404;
+      return next(err);
+    }
+
+    return res.render('Trades/edit', { item });
+  } catch (err) {
     return next(err);
   }
-
-  return res.render('Trades/edit', { item });
 };
 
-exports.update = (req, res, next) => {
-  const { name, category, details, status, image, team, year, condition } = req.body || {};
+exports.update = async (req, res, next) => {
+  if (!validateId(req.params.id, next)) return;
 
-  if (!name || !category || !details) {
-    const err = new Error('Name, category, and details are required to update an item.');
+  const trade = buildTrade(req.body);
+
+  if (!trade.name || !trade.category || !trade.details) {
+    const err = new Error('Name, catigories, and details are required to update an item.');
     err.status = 400;
     return next(err);
   }
 
-  const updated = itemModel.updateById(req.params.id, {
-    name: name.trim(),
-    category: category.trim().toLowerCase(),
-    details: details.trim(),
-    status: (status || 'Available').trim(),
-    image: (image || '/image.png').trim(),
-    team: (team || '').trim(),
-    year: year ? Number.parseInt(year, 10) : null,
-    condition: (condition || 'None').trim()
-  });
+  try {
+    const updated = await itemModel.findByIdAndUpdate(req.params.id, trade, {
+      new: true,
+      runValidators: true
+    });
 
-  if (!updated) {
-    const err = new Error(`No item found with id ${req.params.id}`);
-    err.status = 404;
-    return next(err);
+    if (!updated) {
+      const err = new Error(`No item found with id ${req.params.id}`);
+      err.status = 404;
+      return next(err);
+    }
+
+    return res.redirect(`/trades/${req.params.id}`);
+  } catch (err) {
+    return handleDatabaseError(err, next);
   }
-
-  return res.redirect(`/trades/${req.params.id}`);
 };
 
-exports.delete = (req, res, next) => {
-  const deleted = itemModel.deleteById(req.params.id);
+exports.delete = async (req, res, next) => {
+  if (!validateId(req.params.id, next)) return;
 
-  if (!deleted) {
-    const err = new Error(`No item found with id ${req.params.id}`);
-    err.status = 404;
+  try {
+    const deleted = await itemModel.findByIdAndDelete(req.params.id);
+
+    if (!deleted) {
+      const err = new Error(`No item found with id ${req.params.id}`);
+      err.status = 404;
+      return next(err);
+    }
+
+    return res.redirect('/trades');
+  } catch (err) {
+    err.status = 500;
     return next(err);
   }
-
-  return res.redirect('/trades');
 };
