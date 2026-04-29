@@ -1,0 +1,77 @@
+<%- include('../header') %>
+
+<div class="main home-main">
+  <h2>Create an Account</h2>
+  <p>Sign up to start posting trades and managing your collection.</p>
+
+  <form class="trade-form" action="/users/signup" method="POST">
+    <label for="username">
+      Username
+      <input
+        type="text"
+        id="username"
+        name="username"
+        placeholder="username"
+        required
+        minlength="3"
+        maxlength="20"
+      >
+    </label>
+
+    <label for="name">
+      First Name
+      <input
+        type="text"
+        id="name"
+        name="name"
+        placeholder="first name"
+        required
+        minlength="2"
+        maxlength="30"
+      >
+    </label>
+
+    <label for="lastName">
+      Last Name
+      <input
+        type="text"
+        id="lastName"
+        name="lastName"
+        placeholder="last name"
+        required
+        minlength="2"
+        maxlength="30"
+      >
+    </label>
+
+    <label for="email">
+      Email
+      <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="email@example.com"
+        required
+        pattern=".+@.+\..+"
+      >
+    </label>
+
+    <label for="password">
+      Password
+      <input
+        type="password"
+        id="password"
+        name="password"
+        placeholder="password"
+        required
+        minlength="8"
+      >
+    </label>
+
+    <button type="submit" class="btn">Sign Up</button>
+  </form>
+
+  <p>Already have an account? <a href="/login">Log in here</a>.</p>
+</div>
+
+<%- include('../footer') %>

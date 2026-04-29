@@ -3,7 +3,9 @@
 <div class="main">
   <h2>Available Trades</h2>
   <p>Browse baseball cards by catigories.</p>
-  <p><a href="/trades/new">Create New Item</a></p>
+  <% if (isLoggedIn) { %>
+    <p><a href="/trades/new">Create New Item</a></p>
+  <% } %>
 
   <% const topicList = topics || [...new Set(items.map((item) => item.category))]; %>
 

@@ -1,0 +1,67 @@
+<%- include('../header') %>
+
+<div class="main home-main">
+  <h2>Profile</h2>
+  <p>View your account and the trades you have created.</p>
+
+  <%
+    const profile = typeof profileUser !== 'undefined'
+      ? profileUser
+      : (typeof userData !== 'undefined' ? userData : null);
+    const userTrades = Array.isArray(trades) ? trades : [];
+  %>
+
+  <div class="trade-item">
+    <h3>Account Information</h3>
+    <p><strong>First Name:</strong> <%= profile && profile.name ? profile.name : 'Not available yet' %></p>
+    <p><strong>Last Name:</strong> <%= profile && profile.lastName ? profile.lastName : 'Not available yet' %></p>
+    <p><strong>Email:</strong> <%= profile && profile.email ? profile.email : 'Not available yet' %></p>
+  </div>
+
+  <div class="trade-item">
+    <h3>My Created Trades</h3>
+
+    <% if (userTrades.length) { %>
+      <table class="profile-trades-table">
+        <thead>
+          <tr>
+            <th>Trade</th>
+            <th>Category</th>
+            <th>Team</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% userTrades.forEach((trade) => { %>
+            <tr>
+              <td><a href="/trades/<%= trade._id %>"><%= trade.name %></a></td>
+              <td><%= trade.category %></td>
+              <td><%= trade.team || 'Not listed' %></td>
+              <td><%= trade.status || 'Available' %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p>You have not created any trades yet.</p>
+    <% } %>
+  </div>
+
+  <p>
+    <a href="/trades" class="btn">Browse Trades</a>
+  </p>
+  <div class="favorites">
+    <h3>Favorite Trades</h3>
+    <% if (profile && profile.favorites && profile.favorites.length) { %>
+      <ul>
+        <% profile.favorites.forEach((trade) => { %>
+          <li><a href="/trades/<%= trade._id %>"><%= trade.name %></a></li>
+        <% }) %>
+      </ul>
+    <% } else { %>
+      <p>No Favorites.</p>
+    <% } %>
+  </div>
+</div>
+
+<%- include('../footer') %>

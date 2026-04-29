@@ -14,25 +14,27 @@ function buildTrade(body = {}) {
   };
 }
 
-function validateId(id, next) {
+function flashRedirect(req, res, message, redirectTo) {
+  req.flash('error', message);
+  return res.redirect(redirectTo);
+}
+
+function validateId(id, req, res, redirectTo) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    const err = new Error('Invalid trade ID');
-    err.status = 400;
-    next(err);
+    flashRedirect(req, res, 'Invalid trade ID.', redirectTo);
     return false;
   }
 
   return true;
 }
 
-function handleDatabaseError(err, next) {
+function handleDatabaseError(err, req, res, redirectTo, next) {
   if (err.name === 'ValidationError') {
-    err.status = 400;
-  } else {
-    err.status = 500;
+    return flashRedirect(req, res, 'Please complete the required trade fields.', 'back');
   }
 
-  next(err);
+  err.status = 500;
+  return next(err);
 }
 
 exports.index = async (req, res, next) => {
@@ -46,18 +48,23 @@ exports.index = async (req, res, next) => {
 };
 
 exports.show = async (req, res, next) => {
-  if (!validateId(req.params.id, next)) return;
+  if (!validateId(req.params.id, req, res, '/trades')) return;
 
   try {
     const item = await itemModel.findById(req.params.id);
 
     if (!item) {
-      const err = new Error(`Cannot find an item with id ${req.params.id}`);
-      err.status = 404;
-      return next(err);
+      return flashRedirect(req, res, 'That trade could not be found.', '/trades');
     }
 
-    return res.render('Trades/trade', { item });
+    const isOwner = Boolean(
+      req.session.user &&
+      req.session.user.id &&
+      item.author &&
+      item.author.toString() === req.session.user.id
+    );
+
+    return res.render('Trades/trade', { item, isOwner });
   } catch (err) {
     return next(err);
   }
@@ -70,30 +77,31 @@ exports.new = (req, res) => {
 exports.create = async (req, res, next) => {
   const trade = buildTrade(req.body);
 
+  if (req.session.user && mongoose.Types.ObjectId.isValid(req.session.user.id)) {
+    trade.author = req.session.user.id;
+  }
+
   if (!trade.name || !trade.category || !trade.details) {
-    const err = new Error('Name, catigories, and details are required to create an item.');
-    err.status = 400;
-    return next(err);
+    return flashRedirect(req, res, 'Name, categories, and details are required to create an item.', 'back');
   }
 
   try {
     const item = await itemModel.create(trade);
+    req.flash('success', 'Trade created successfully.');
     return res.redirect(`/trades/${item.id}`);
   } catch (err) {
-    return handleDatabaseError(err, next);
+    return handleDatabaseError(err, req, res, '/trades/new', next);
   }
 };
 
 exports.edit = async (req, res, next) => {
-  if (!validateId(req.params.id, next)) return;
+  if (!validateId(req.params.id, req, res, '/trades')) return;
 
   try {
     const item = await itemModel.findById(req.params.id);
 
     if (!item) {
-      const err = new Error(`Cannot find an item with id ${req.params.id}`);
-      err.status = 404;
-      return next(err);
+      return flashRedirect(req, res, 'That trade could not be found.', '/trades');
     }
 
     return res.render('Trades/edit', { item });
@@ -103,14 +111,12 @@ exports.edit = async (req, res, next) => {
 };
 
 exports.update = async (req, res, next) => {
-  if (!validateId(req.params.id, next)) return;
+  if (!validateId(req.params.id, req, res, '/trades')) return;
 
   const trade = buildTrade(req.body);
 
   if (!trade.name || !trade.category || !trade.details) {
-    const err = new Error('Name, catigories, and details are required to update an item.');
-    err.status = 400;
-    return next(err);
+    return flashRedirect(req, res, 'Name, categories, and details are required to update an item.', 'back');
   }
 
   try {
@@ -120,32 +126,42 @@ exports.update = async (req, res, next) => {
     });
 
     if (!updated) {
-      const err = new Error(`No item found with id ${req.params.id}`);
-      err.status = 404;
-      return next(err);
+      return flashRedirect(req, res, 'That trade could not be found.', '/trades');
     }
 
+    req.flash('success', 'Trade updated successfully.');
     return res.redirect(`/trades/${req.params.id}`);
   } catch (err) {
-    return handleDatabaseError(err, next);
+    return handleDatabaseError(err, req, res, `/trades/${req.params.id}/edit`, next);
   }
 };
 
 exports.delete = async (req, res, next) => {
-  if (!validateId(req.params.id, next)) return;
+  if (!validateId(req.params.id, req, res, '/trades')) return;
 
   try {
     const deleted = await itemModel.findByIdAndDelete(req.params.id);
 
     if (!deleted) {
-      const err = new Error(`No item found with id ${req.params.id}`);
-      err.status = 404;
-      return next(err);
+      return flashRedirect(req, res, 'That trade could not be found.', '/trades');
     }
 
+    req.flash('success', 'Trade deleted successfully.');
     return res.redirect('/trades');
   } catch (err) {
     err.status = 500;
     return next(err);
   }
+};
+
+exports.favoriteList = (req, res, next) => {
+  const userId = req.session.user.id;
+
+  tradeModel.find({ favorites: userId })
+    .then((trades) => {
+      res.render('Trades/favorites', { trades });
+    })
+    .catch((error) => {
+      next(error);
+    });
 };

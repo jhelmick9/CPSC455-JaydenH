@@ -17,14 +17,22 @@
     <p><b>Year:</b> <%= item.year || 'N/A' %></p>
     <p><b>Grade:</b> <%= item.condition || 'N/A' %></p>
     <p><b>Status:</b> <%= item.status %></p>
+
+    <% if (isLoggedIn) { %>
+      <form action="/users/favorites/<%= item.id %>" method="post" style="margin-top: 12px;">
+        <button type="submit" class="btn">Add to Favorites</button>
+      </form>
+    <% } %>
   </div>
 
-  <div class="updateButtons">
-    <a class="editButton" href="/trades/<%= item.id %>/edit">Update</a>
-    <form action="/trades/<%= item.id %>/delete" method="post" style="display:inline" onsubmit="return confirm('Delete this item?');">
-      <button class="deleteButton" type="submit">Delete</button>
-    </form>
-  </div>
+  <% if (isOwner) { %>
+    <div class="updateButtons">
+      <a class="editButton" href="/trades/<%= item.id %>/edit">Update</a>
+      <form action="/trades/<%= item.id %>/delete" method="post" style="display:inline" onsubmit="return confirm('Delete this item?');">
+        <button class="deleteButton" type="submit">Delete</button>
+      </form>
+    </div>
+  <% } %>
 </div>
 
 <%- include('../Partials/footer') %>

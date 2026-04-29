@@ -24,8 +24,13 @@ const tradesSchema = new Schema({
   status: {
     type: String,
     default: 'Available'
+  },
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
   }
+}, {
+  timestamps: true
 });
 
 module.exports = mongoose.model('Card', tradesSchema, 'Card');
-

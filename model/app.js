@@ -1,9 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
+const session = require('express-session');
+const MongoStore = require('connect-mongo').default;
+const flash = require('connect-flash');
+const mainRoute = require('../routes/mainRoute');
+const tradeRoute = require('../routes/tradeRoute');
+const userRoute = require('../routes/userRoute');
 
-const mainRoutes = require('../routes/mainRoute');
-const tradeRoutes = require('../routes/tradeRoute');
 
 const app = express();
 const port = 8080;
@@ -15,8 +19,29 @@ app.set('views', path.join(rootDir, 'views'));
 app.use(express.static(rootDir));
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/', mainRoutes);
-app.use('/trades', tradeRoutes);
+app.use(
+    session({
+        secret: "ajfeirf90aeu9eroejfoefj",
+        resave: false,
+        saveUninitialized: false,
+        store: MongoStore.create({ mongoUrl: 'mongodb://localhost:27017/cards' }),
+        cookie: {maxAge: 60*60*1000}
+        })
+);
+
+app.use(flash());
+
+app.use((req, res, next) => {
+    res.locals.user = req.session.user||null;
+    res.locals.isLoggedIn = Boolean(req.session.user && req.session.user.id);
+    res.locals.errorMessages = req.flash('error');
+    res.locals.successMessages = req.flash('success');
+    next();
+});
+
+app.use('/', mainRoute);
+app.use('/trades', tradeRoute);
+app.use('/users', userRoute);
 
 app.use((req, res, next) => {
   const err = new Error(`The requested page ${req.originalUrl} was not found.`);

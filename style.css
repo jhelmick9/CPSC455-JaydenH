@@ -61,6 +61,43 @@ body {
   margin-left: auto;
 }
 
+.nav .login-link {
+  background: #ffffff;
+  color: #035ade;
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+
+.nav .login-link {
+  text-decoration: none;
+  background: #ffffff;
+}
+
+.flash-wrap {
+  max-width: 900px;
+  margin: 12px auto 0;
+  padding: 0 20px;
+}
+
+.flash {
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.flash-error {
+  background: #fde8e8;
+  border: 1px solid #f3b2b2;
+  color: #8f1d1d;
+}
+
+.flash-success {
+  background: #e8f7ec;
+  border: 1px solid #add8b8;
+  color: #17633a;
+}
+
 .main { 
   flex: 1 0 auto;
   align-items: center;}

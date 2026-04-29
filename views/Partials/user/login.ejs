@@ -1,0 +1,38 @@
+<%- include('../header') %>
+
+<div class="main home-main">
+  <h2>Login</h2>
+  <p>Sign in to manage your trades and account.</p>
+
+  <form class="trade-form" action="/users/login" method="POST">
+    <label for="email">
+      Email
+      <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="you@example.com"
+        required
+        pattern=".+@.+\..+"
+      >
+    </label>
+
+    <label for="password">
+      Password
+      <input
+        type="password"
+        id="password"
+        name="password"
+        placeholder="Enter your password"
+        required
+        minlength="8"
+      >
+    </label>
+
+    <button type="submit" class="btn">Login</button>
+  </form>
+
+  <p>Don't have an account yet? <a href="/signup">Create an account here</a>.</p>
+</div>
+
+<%- include('../footer') %>

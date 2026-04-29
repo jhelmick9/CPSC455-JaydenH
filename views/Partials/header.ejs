@@ -17,7 +17,31 @@
   <div class="nav">
     <a href="/">Home</a>
     <a href="/trades">Trades</a>
-    <a href="/trades/new">New Trade</a>
     <a href="/about">About</a>
     <a href="/contact">Contact</a>
+    <% if (isLoggedIn) { %>
+      <span class="welcome-message">Welcome, <%= user.name %></span>
+      <a href="/trades/new">New Trade</a>
+      <a href="/users/profile">Profile</a>
+      <a href="/users/signout" class="login-link">Logout</a>
+    <% } else { %>
+      <a href="/signup">Sign Up</a>
+      <a href="/login" class="login-link">Login</a>
+    <% } %>
   </div>
+
+  <% if (errorMessages && errorMessages.length) { %>
+    <div class="flash-wrap">
+      <% errorMessages.forEach((message) => { %>
+        <div class="flash flash-error"><%= message %></div>
+      <% }) %>
+    </div>
+  <% } %>
+
+  <% if (successMessages && successMessages.length) { %>
+    <div class="flash-wrap">
+      <% successMessages.forEach((message) => { %>
+        <div class="flash flash-success"><%= message %></div>
+      <% }) %>
+    </div>
+  <% } %>
