@@ -1,0 +1,38 @@
+<%- include('../Partials/header') %>
+
+<div class="main home-main">
+  <h2>Create Offer</h2>
+
+  <div class="trade-item">
+    <h3>Requested Card</h3>
+    <p><strong><%= requestedCard.name %></strong></p>
+    <p><%= requestedCard.team || 'Team not listed' %> | <%= requestedCard.year || 'Year not listed' %></p>
+    <p><%= requestedCard.details %></p>
+  </div>
+
+  <div class="trade-item">
+    <h3>Your Card</h3>
+
+    <% if (userCards.length) { %>
+      <form action="/api/offers/create" method="post" class="trade-form">
+        <input type="hidden" name="card2" value="<%= requestedCard._id %>">
+
+        <label for="card1">Choose a card to offer</label>
+        <select id="card1" name="card1" required>
+          <% userCards.forEach((card) => { %>
+            <option value="<%= card._id %>">
+              <%= card.name %> - <%= card.team || 'Team not listed' %> - <%= card.year || 'Year not listed' %>
+            </option>
+          <% }) %>
+        </select>
+
+        <button type="submit" class="btn">Submit Offer</button>
+      </form>
+    <% } else { %>
+      <p>You do not have any available cards to offer.</p>
+      <p><a href="/trades/new" class="btn">Add Card</a></p>
+    <% } %>
+  </div>
+</div>
+
+<%- include('../Partials/footer') %>

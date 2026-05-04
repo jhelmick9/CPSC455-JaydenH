@@ -9,6 +9,15 @@
       ? profileUser
       : (typeof userData !== 'undefined' ? userData : null);
     const userTrades = Array.isArray(trades) ? trades : [];
+    const createdOffers = Array.isArray(outgoingOffers) ? outgoingOffers : [];
+    const receivedOffers = Array.isArray(incomingOffers) ? incomingOffers : [];
+    const pendingIncomingByCard = {};
+
+    receivedOffers.forEach((offer) => {
+      if (offer.status === 'pending' && offer.card2 && offer.card2._id) {
+        pendingIncomingByCard[offer.card2._id.toString()] = offer;
+      }
+    });
   %>
 
   <div class="trade-item">
@@ -19,7 +28,7 @@
   </div>
 
   <div class="trade-item">
-    <h3>My Created Trades</h3>
+    <h3>My Cards</h3>
 
     <% if (userTrades.length) { %>
       <table class="profile-trades-table">
@@ -29,15 +38,24 @@
             <th>Category</th>
             <th>Team</th>
             <th>Status</th>
+            <th>Offer</th>
           </tr>
         </thead>
         <tbody>
           <% userTrades.forEach((trade) => { %>
+            <% const pendingOffer = pendingIncomingByCard[trade._id.toString()]; %>
             <tr>
               <td><a href="/trades/<%= trade._id %>"><%= trade.name %></a></td>
               <td><%= trade.category %></td>
               <td><%= trade.team || 'Not listed' %></td>
               <td><%= trade.status || 'Available' %></td>
+              <td>
+                <% if (pendingOffer) { %>
+                  <a href="/users/offers/<%= pendingOffer._id %>/manage" class="btn">Manage Offer</a>
+                <% } else { %>
+                  None
+                <% } %>
+              </td>
             </tr>
           <% }) %>
         </tbody>
@@ -50,18 +68,71 @@
   <p>
     <a href="/trades" class="btn">Browse Trades</a>
   </p>
-  <div class="favorites">
+
+  <div class="trade-item">
     <h3>Favorite Trades</h3>
     <% if (profile && profile.favorites && profile.favorites.length) { %>
       <ul>
         <% profile.favorites.forEach((trade) => { %>
-          <li><a href="/trades/<%= trade._id %>"><%= trade.name %></a></li>
+          <li>
+            <a href="/trades/<%= trade._id %>"><%= trade.name %></a>
+            <form action="/trades/<%= trade._id %>/unfavorite" method="POST" class="inline-form">
+              <button type="submit" class="deleteButton">
+                &times; Unfavorite
+              </button>
+            </form>
+          </li>
         <% }) %>
       </ul>
     <% } else { %>
-      <p>No Favorites.</p>
+      <p>No favorites yet.</p>
     <% } %>
   </div>
+
+  <div class="trade-item">
+    <h3>My Offers</h3>
+    <% if (createdOffers.length) { %>
+      <ul>
+        <% createdOffers.forEach((offer) => { %>
+          <li>
+            <a href="/trades/<%= offer.card1 && offer.card1._id %>"><%= offer.card1 ? offer.card1.name : 'Card not found' %></a>
+            for
+            <a href="/trades/<%= offer.card2 && offer.card2._id %>"><%= offer.card2 ? offer.card2.name : 'Card not found' %></a>
+            - <%= offer.status %>
+            <% if (offer.status === 'pending') { %>
+              <form action="/users/offers/<%= offer._id %>/cancel" method="post" class="inline-form">
+                <button type="submit" class="deleteButton">Cancel</button>
+              </form>
+            <% } %>
+          </li>
+        <% }) %>
+      </ul>
+    <% } else { %>
+      <p>No outgoing offers yet.</p>
+    <% } %>
+  </div>
+
+  <div class="trade-item">
+    <h3>Incoming Offers</h3>
+    <% if (receivedOffers.length) { %>
+      <ul>
+        <% receivedOffers.forEach((offer) => { %>
+          <li>
+            <a href="/trades/<%= offer.card1 && offer.card1._id %>"><%= offer.card1 ? offer.card1.name : 'Card not found' %></a>
+            for
+            <a href="/trades/<%= offer.card2 && offer.card2._id %>"><%= offer.card2 ? offer.card2.name : 'Card not found' %></a>
+            - <%= offer.status %>
+            <% if (offer.status === 'pending') { %>
+              <a href="/users/offers/<%= offer._id %>/manage" class="btn">Manage Offer</a>
+            <% } %>
+          </li>
+        <% }) %>
+      </ul>
+    <% } else { %>
+      <p>No incoming offers yet.</p>
+    <% } %>
+  </div>
+
 </div>
 
 <%- include('../footer') %>

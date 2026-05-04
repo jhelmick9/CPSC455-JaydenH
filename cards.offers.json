@@ -1,0 +1,75 @@
+[{
+  "_id": {
+    "$oid": "69f7d744685c4bf015a68571"
+  },
+  "user1": {
+    "$oid": "69f7d6ea685c4bf015a6856f"
+  },
+  "card1": {
+    "$oid": "69f7d735685c4bf015a68570"
+  },
+  "user2": {
+    "$oid": "69ef61e7f5e89ed2b83d5a85"
+  },
+  "card2": {
+    "$oid": "69f7d651685c4bf015a6856e"
+  },
+  "status": "cancelled",
+  "createdAt": {
+    "$date": "2026-05-03T23:16:20.154Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-03T23:16:32.570Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69f7d8b32e31fa405915d88f"
+  },
+  "user1": {
+    "$oid": "69f7d6ea685c4bf015a6856f"
+  },
+  "card1": {
+    "$oid": "69f7d735685c4bf015a68570"
+  },
+  "user2": {
+    "$oid": "69ef61e7f5e89ed2b83d5a85"
+  },
+  "card2": {
+    "$oid": "69f7d651685c4bf015a6856e"
+  },
+  "status": "accepted",
+  "createdAt": {
+    "$date": "2026-05-03T23:22:27.969Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-03T23:23:05.092Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69f7dcd42812bc7a526bf0a4"
+  },
+  "user1": {
+    "$oid": "69ef61e7f5e89ed2b83d5a85"
+  },
+  "card1": {
+    "$oid": "69f7dcc62812bc7a526bf0a3"
+  },
+  "user2": {
+    "$oid": "69f7d6ea685c4bf015a6856f"
+  },
+  "card2": {
+    "$oid": "69f7dc4b2812bc7a526bf0a2"
+  },
+  "status": "accepted",
+  "createdAt": {
+    "$date": "2026-05-03T23:40:04.012Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-03T23:40:40.831Z"
+  },
+  "__v": 0
+}]

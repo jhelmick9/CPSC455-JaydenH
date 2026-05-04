@@ -17,6 +17,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(rootDir, 'views'));
 
 app.use(express.static(rootDir));
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(
@@ -42,6 +43,7 @@ app.use((req, res, next) => {
 app.use('/', mainRoute);
 app.use('/trades', tradeRoute);
 app.use('/users', userRoute);
+app.use('/api', userRoute);
 
 app.use((req, res, next) => {
   const err = new Error(`The requested page ${req.originalUrl} was not found.`);

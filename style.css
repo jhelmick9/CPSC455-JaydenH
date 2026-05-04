@@ -129,6 +129,23 @@ body {
 .trade-item a { color: #0077cc; text-decoration: none; font-weight: 600; }
 .trade-item p { margin: 6px 0 0; color: #666; font-size: 0.95rem; }
 
+.profile-trades-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+
+.profile-trades-table th,
+.profile-trades-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.profile-trades-table th {
+  background: #f3f3f3;
+}
+
 .trade_main img {
   max-width: 300px;
   width: 100%;
@@ -138,9 +155,78 @@ body {
 
 .trade-form label, .search-form label { display: block; margin: 8px 0; }
 .trade-form input, .trade-form select, .search-form input, .search-form select { width: 100%; padding: 6px; margin-top: 4px; }
-.trade-form button, .btn, .editButton, .deleteButton { background: #035ade; color: #fff; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; }
+
+.btn,
+.editButton,
+.deleteButton,
+.tradeButton,
+.trade-form button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 8px 14px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: #035ade;
+  color: #fff;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.1;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.btn:hover,
+.editButton:hover,
+.deleteButton:hover,
+.tradeButton:hover,
+.trade-form button:hover {
+  filter: brightness(0.92);
+  text-decoration: none;
+}
+
+.btn:focus-visible,
+.editButton:focus-visible,
+.deleteButton:focus-visible,
+.tradeButton:focus-visible,
+.trade-form button:focus-visible {
+  outline: 3px solid rgba(3, 90, 222, 0.25);
+  outline-offset: 2px;
+}
+
+.editButton { background: #15803d; }
 .deleteButton { background: #c7001e; }
-.editButton { background: #01b916; color: #fff; text-decoration: none; display: inline-block; padding: 8px 12px; border-radius: 6px; }
+.tradeButton { background: #c3bd00; }
+
+.button-row,
+.updateButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.inline-form {
+  display: inline-flex;
+  margin: 0;
+}
+
+.trade-item li {
+  margin: 8px 0;
+}
+
+.trade-item form {
+  margin-top: 6px;
+}
+
+.trade-item .inline-form {
+  margin: 0 0 0 6px;
+}
 
 .footer {
   text-align: center;

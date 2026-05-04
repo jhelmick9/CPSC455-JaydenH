@@ -1,0 +1,42 @@
+<%- include('../Partials/header') %>
+
+<div class="main home-main">
+  <h2>Manage Offer</h2>
+
+  <div class="trade-item">
+    <h3>Offered Card</h3>
+    <% if (offer.card1) { %>
+      <p><strong><%= offer.card1.name %></strong></p>
+      <p><%= offer.card1.team || 'Team not listed' %> | <%= offer.card1.year || 'Year not listed' %></p>
+      <p><%= offer.card1.details %></p>
+    <% } else { %>
+      <p>Card not found.</p>
+    <% } %>
+  </div>
+
+  <div class="trade-item">
+    <h3>Requested Card</h3>
+    <% if (offer.card2) { %>
+      <p><strong><%= offer.card2.name %></strong></p>
+      <p><%= offer.card2.team || 'Team not listed' %> | <%= offer.card2.year || 'Year not listed' %></p>
+      <p><%= offer.card2.details %></p>
+    <% } else { %>
+      <p>Card not found.</p>
+    <% } %>
+  </div>
+
+  <% if (offer.status === 'pending') { %>
+    <div class="button-row">
+    <form action="/users/offers/<%= offer._id %>/accept" method="post" class="inline-form">
+      <button type="submit" class="btn">Accept</button>
+    </form>
+    <form action="/users/offers/<%= offer._id %>/reject" method="post" class="inline-form">
+      <button type="submit" class="deleteButton">Reject</button>
+    </form>
+    </div>
+  <% } else { %>
+    <p>This offer is <%= offer.status %>.</p>
+  <% } %>
+</div>
+
+<%- include('../Partials/footer') %>
